@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasil Latihan – TOTYPE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dasar.css">
+  <link rel="stylesheet" href="css/beranda.css">
+  <link rel="stylesheet" href="css/hasil.css">
+</head>
+<body>
+
+  <!-- Kepala halaman (sama dengan Beranda) -->
+  <header class="kepala">
+    <div class="logo">
+      <div class="logo-kotak">T</div>
+      <div class="logo-teks">
+        <span class="logo-nama">TO<span>TYPE</span></span>
+        <span class="logo-sub">SMK OTOMOTIF</span>
+      </div>
+    </div>
+    <nav class="menu">
+      <a href="beranda.html" class="aktif">Latihan</a>
+      <a href="statistik.html">Statistik</a>
+    </nav>
+    <div class="kepala-kanan">
+      <div class="profil">
+        <div class="profil-teks">
+          <b id="nama-siswa">Nama Siswa</b>
+          <small id="kelas-siswa">Kelas</small>
+        </div>
+        <div class="avatar" id="avatar">S</div>
+      </div>
+      <button class="tautan-keluar" id="btn-keluar" type="button">
+        <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+        Keluar
+      </button>
+    </div>
+  </header>
+
+  <!-- Isi diisi oleh js/hasil.js: tampilan LULUS atau BELUM LULUS -->
+  <main class="isi isi-hasil" id="isi-hasil"></main>
+
+  <footer class="kaki">
+    <span>
+      <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>
+      Modul Pengenalan Teknik Kendaraan Ringan Otomotif
+    </span>
+    <span>© 2026 TOTYPE</span>
+  </footer>
+
+  <script src="js/sesi.js"></script>
+  <script src="js/level.js"></script>
+  <script src="js/jari.js"></script>
+  <script src="js/hasil.js"></script>
+</body>
+</html>
