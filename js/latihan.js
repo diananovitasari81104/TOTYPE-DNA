@@ -233,6 +233,7 @@ function kilat(id, salah) {
 document.addEventListener('keydown', function (e) {
   if (!S || S.selesai) return;
   if (dialog === 'diam') { e.preventDefault(); tutupDialog(); lanjutkan(); return; }
+  if (dialog === 'keluar' && e.key === 'Escape') { tutupDialog(); lanjutkan(); return; }
   if (dialog) return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (e.key === 'Escape') { dialogKeluar(); return; }
@@ -310,26 +311,40 @@ function bukaDialog(jenis, html) {
 }
 function tutupDialog() { dialog = null; $('tempat-dialog').innerHTML = ''; }
 
+/* Dialog 1: Konfirmasi keluar (tombol Keluar Sesi atau Esc) */
 function dialogKeluar() {
   if (!S || S.selesai) return;
   S.jeda = true;
   bukaDialog('keluar',
-    '<div class="dialog-ikon"><svg class="ik" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg></div>' +
+    '<div class="dialog-ikon oranye"><svg class="ik" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><path d="M12 16h.01"/></svg></div>' +
     '<h2>Yakin mau keluar?</h2>' +
     '<p>Latihan ini belum selesai dan tidak akan dihitung. Level yang sudah lulus tetap tersimpan.</p>' +
-    '<div class="aksi"><button class="tombol tombol-utama" id="d-lanjut">Lanjut Latihan</button>' +
-    '<button class="tombol tombol-kedua" id="d-keluar">Keluar</button></div>');
+    '<div class="aksi">' +
+      '<button class="tombol tombol-kedua" id="d-keluar"><svg class="ik" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>Keluar</button>' +
+      '<button class="tombol tombol-utama" id="d-lanjut">Lanjut Latihan<svg class="ik" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>' +
+    '</div>' +
+    '<p class="dialog-catatan">Tekan <kbd>Esc</kbd> untuk kembali mengetik</p>');
   $('d-lanjut').addEventListener('click', function () { tutupDialog(); lanjutkan(); });
   $('d-keluar').addEventListener('click', function () { clearInterval(detak); window.location.href = 'beranda.html'; });
 }
 
+/* Dialog 2: Jeda otomatis (tidak mengetik selama BATAS_DIAM_DETIK) */
 function dialogDiam() {
   S.jeda = true;
   perbaruiStatistik();
+  const labelWaktu = level.timer ? 'Sisa waktu' : 'Waktu berjalan';
+  const waktu = level.timer ? formatWaktu(Math.ceil(S.batas - S.aktifMs / 1000)) : formatWaktu(S.aktifMs / 1000);
   bukaDialog('diam',
-    '<div class="dialog-ikon"><svg class="ik" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></div>' +
-    '<h2>Latihan dijeda</h2>' +
-    '<p>Kamu tidak mengetik selama ' + BATAS_DIAM_DETIK + ' detik. Tekan tombol apa saja untuk lanjut.</p>' +
-    '<div class="aksi"><button class="tombol tombol-utama" id="d-lanjut">Lanjut</button></div>');
+    '<div class="dialog-ikon"><svg class="ik" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></svg></div>' +
+    '<span class="pil-jeda">Jeda otomatis</span>' +
+    '<h2>Latihan Dijeda</h2>' +
+    '<p>Latihan dijeda karena kamu tidak mengetik selama ' + BATAS_DIAM_DETIK + ' detik. Tekan tombol apa saja untuk lanjut.</p>' +
+    '<div class="kotak-waktu">' +
+      '<span><svg class="ik" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg>' + labelWaktu + '</span>' +
+      '<b>' + waktu + '</b><small>berhenti</small>' +
+    '</div>' +
+    '<button class="tombol tombol-utama tombol-penuh" id="d-lanjut"><svg class="ik" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Lanjut Mengetik</button>' +
+    '<p class="dialog-catatan">Atau tekan <kbd>Spasi</kbd> <kbd>Enter</kbd> atau tombol apa saja</p>' +
+    '<div class="dialog-saran"><svg class="ik" viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Ambil napas sejenak, regangkan jari tanganmu.</div>');
   $('d-lanjut').addEventListener('click', function () { tutupDialog(); lanjutkan(); });
 }
