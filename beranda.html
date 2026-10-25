@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pilih Level – TOTYPE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dasar.css">
+  <link rel="stylesheet" href="css/beranda.css">
+</head>
+<body>
+
+  <!-- Kepala halaman -->
+  <header class="kepala">
+    <div class="logo">
+      <div class="logo-kotak">T</div>
+      <div class="logo-teks">
+        <span class="logo-nama">TO<span>TYPE</span></span>
+        <span class="logo-sub">SMK OTOMOTIF</span>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a href="beranda.html" class="aktif">Latihan</a>
+      <a href="statistik.html">Statistik</a>
+    </nav>
+
+    <div class="kepala-kanan">
+      <div class="profil">
+        <div class="profil-teks">
+          <b id="nama-siswa">Nama Siswa</b>
+          <small id="kelas-siswa">Kelas</small>
+        </div>
+        <div class="avatar" id="avatar">S</div>
+      </div>
+      <button class="tautan-keluar" id="btn-keluar" type="button">
+        <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+        Keluar
+      </button>
+    </div>
+  </header>
+
+  <main class="isi">
+    <!-- Judul dan progres -->
+    <section class="judul-halaman">
+      <div>
+        <span class="pil-kurikulum">
+          <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M8 7h7"/></svg>
+          Kurikulum praktik bengkel TKRO
+        </span>
+        <h1>Pilih Level Latihan</h1>
+        <p>Langkah demi langkah menuju mahir mengetik sepuluh jari untuk siswa otomotif.</p>
+      </div>
+
+      <div class="kartu-progres">
+        <div class="kartu-progres-atas">
+          <span>Progres Belajar</span>
+          <b id="teks-progres">0 dari 5 Level (0%)</b>
+        </div>
+        <div class="bar"><i id="bar-progres" style="width:0%"></i></div>
+      </div>
+    </section>
+
+    <!-- Daftar level (diisi oleh js/beranda.js sesuai progres siswa) -->
+    <section class="daftar-level" id="daftar-level"></section>
+
+    <!-- Tips -->
+    <aside class="tips">
+      <div class="tips-ikon">
+        <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+      </div>
+      <p><b>Tips Mekanik:</b> Jangan terburu-buru. Utamakan ketepatan jari pada tuts daripada kecepatan. Kamu selalu bisa mengulang latihan.</p>
+      <span class="tips-lab">Lab Komputer TKRO</span>
+    </aside>
+  </main>
+
+  <footer class="kaki">
+    <span>
+      <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>
+      Modul Pengenalan Teknik Kendaraan Ringan Otomotif
+    </span>
+    <span>© 2026 TOTYPE</span>
+  </footer>
+
+  <script src="js/sesi.js"></script>
+  <script src="js/level.js"></script>
+  <script src="js/beranda.js"></script>
+</body>
+</html>

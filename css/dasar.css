@@ -1,0 +1,64 @@
+/* =========================================================
+   TOTYPE – gaya dasar (dipakai semua halaman)
+   ========================================================= */
+:root {
+  --biru: #2563EB;
+  --biru-tua: #1D4ED8;
+  --biru-50: #EEF4FF;
+  --biru-100: #DBE7FE;
+  --biru-200: #BFD4FE;
+  --navy: #0F2A4A;
+  --teks: #1E293B;
+  --teks-2: #64748B;
+  --teks-3: #94A3B8;
+  --garis: #E2E8F0;
+  --latar: #F1F4F9;
+  --hijau: #16A34A;
+  --hijau-50: #ECFDF3;
+  --merah: #DC2626;
+  --merah-50: #FEF2F2;
+  --bayangan: 0 1px 2px rgba(15, 42, 74, .06), 0 8px 24px rgba(15, 42, 74, .06);
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: var(--teks);
+  background: var(--latar);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; color: inherit; }
+
+/* Ikon garis */
+.ik {
+  width: 18px; height: 18px; flex: none;
+  stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Logo */
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-kotak {
+  width: 34px; height: 34px; border-radius: 8px; background: var(--biru);
+  color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 19px;
+}
+.logo-teks { display: flex; flex-direction: column; line-height: 1; }
+.logo-nama { font-weight: 800; font-size: 20px; letter-spacing: .5px; color: var(--navy); }
+.logo-nama span { color: var(--biru); }
+.logo-sub { font-size: 8.5px; letter-spacing: 1.6px; color: var(--teks-2); font-weight: 600; margin-top: 3px; }
+
+/* Tombol */
+.tombol {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; padding: 0 24px; border-radius: 10px; border: 1.5px solid transparent;
+  font-weight: 600; font-size: 17px; cursor: pointer; transition: background .15s, border-color .15s;
+}
+.tombol-utama { background: var(--biru); color: #fff; box-shadow: 0 4px 12px rgba(37, 99, 235, .25); }
+.tombol-utama:hover { background: var(--biru-tua); }
+.tombol-kedua { background: #fff; color: var(--biru); border-color: var(--biru-200); }
+.tombol-kedua:hover { background: var(--biru-50); }
+.tombol-penuh { width: 100%; }
+.tombol:focus-visible { outline: 3px solid var(--biru-200); outline-offset: 2px; }
