@@ -5,30 +5,7 @@
 const BATAS_DIAM_DETIK = 30;   // diam selama ini → latihan dijeda
 const BATAS_SALAH = 3;         // salah berulang di huruf yang sama → bantuan muncul
 
-/* ---------- Jari untuk tiap tuts (teknik 10 jari) ---------- */
-const JARI = {};
-(function () {
-  const peta = {
-    'kiri-kelingking': ['`', '1', 'q', 'a', 'z', 'Tab', 'Caps', 'ShiftL', 'CtrlL'],
-    'kiri-manis': ['2', 'w', 's', 'x'],
-    'kiri-tengah': ['3', 'e', 'd', 'c'],
-    'kiri-telunjuk': ['4', '5', 'r', 't', 'f', 'g', 'v', 'b'],
-    'kanan-telunjuk': ['6', '7', 'y', 'u', 'h', 'j', 'n', 'm'],
-    'kanan-tengah': ['8', 'i', 'k', ','],
-    'kanan-manis': ['9', 'o', 'l', '.'],
-    'kanan-kelingking': ['0', '-', '=', 'p', '[', ']', '\\', ';', "'", '/', 'Enter', 'ShiftR', 'Backspace', 'CtrlR'],
-    'jempol': [' ']
-  };
-  Object.keys(peta).forEach(function (j) { peta[j].forEach(function (t) { JARI[t] = j; }); });
-})();
-const NAMA_JARI = {
-  kelingking: 'Jari Kelingking', manis: 'Jari Manis', tengah: 'Jari Tengah', telunjuk: 'Jari Telunjuk'
-};
-function namaJari(id) {
-  if (id === 'jempol') return 'Ibu Jari';
-  const p = id.split('-');
-  return NAMA_JARI[p[1]] + ' ' + (p[0] === 'kiri' ? 'Kiri' : 'Kanan');
-}
+/* Peta jari (JARI, namaJari) ada di js/jari.js */
 
 /* ---------- Susunan keyboard: [id, lebar, label] ---------- */
 const BARIS_KB = [
@@ -316,6 +293,7 @@ function selesai(waktuHabis) {
   try {
     localStorage.setItem('totype:hasil', JSON.stringify({
       level: level.id, akurasi: ak, wpm: kec, lulus: lulus, levelBaru: levelBaru,
+      totalTuts: S.total, tutsSalah: S.total - S.benar,
       waktuHabis: waktuHabis, hurufSalah: hurufSalah, kode: S.kode, detik: Math.round(S.aktifMs / 1000)
     }));
   } catch (err) { /* abaikan */ }
