@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistik – TOTYPE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dasar.css">
+  <link rel="stylesheet" href="css/beranda.css">
+  <link rel="stylesheet" href="css/statistik.css">
+</head>
+<body class="halaman-statistik">
+
+  <!-- Kepala halaman (sama dengan halaman lain) -->
+  <header class="kepala">
+    <div class="logo">
+      <div class="logo-kotak">T</div>
+      <div class="logo-teks">
+        <span class="logo-nama">TO<span>TYPE</span></span>
+        <span class="logo-sub">SMK OTOMOTIF</span>
+      </div>
+    </div>
+    <nav class="menu">
+      <a href="beranda.html">Latihan</a>
+      <a href="statistik.html" class="aktif">Statistik</a>
+    </nav>
+    <div class="kepala-kanan">
+      <div class="profil">
+        <div class="profil-teks">
+          <b id="nama-siswa">Nama Siswa</b>
+          <small id="kelas-siswa">Kelas</small>
+        </div>
+        <div class="avatar" id="avatar">S</div>
+      </div>
+      <button class="tautan-keluar" id="btn-keluar" type="button">
+        <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+        Keluar
+      </button>
+    </div>
+  </header>
+
+  <main class="isi isi-statistik">
+
+    <!-- Judul -->
+    <section class="judul-stat">
+      <span class="pil-stat">
+        <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>
+        Statistik pribadi
+      </span>
+      <h1>Perkembangan Belajarku</h1>
+      <p id="sapaan">Setiap latihan adalah kemajuan. Yuk, lihat hal yang sudah baik dan yang bisa dilatih lagi.</p>
+      <div class="meta-stat">
+        <span id="meta-kiri"></span>
+        <span id="meta-tanggal"></span>
+      </div>
+    </section>
+
+    <!-- Belum ada riwayat -->
+    <section class="kartu kosong" id="kosong" hidden>
+      <div class="kosong-ikon">
+        <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>
+      </div>
+      <h2>Belum ada riwayat latihan</h2>
+      <p>Selesaikan satu latihan dulu, lalu statistikmu akan muncul di sini.</p>
+      <a class="tombol tombol-utama" href="beranda.html">Mulai Latihan</a>
+    </section>
+
+    <div class="isi-data" id="isi-data" hidden>
+
+      <!-- Empat angka ringkas -->
+      <section class="empat-angka">
+        <article class="kartu kartu-angka">
+          <div class="angka-kepala"><span>Akurasi terakhir</span><i class="ikon-bulat"><svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></i></div>
+          <b class="angka-besar" id="a-akurasi">–</b>
+          <small id="a-akurasi-ket"></small>
+        </article>
+        <article class="kartu kartu-angka">
+          <div class="angka-kepala"><span>Kecepatan terakhir</span><i class="ikon-bulat"><svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></i></div>
+          <b class="angka-besar" id="a-kpm">–</b>
+          <small id="a-kpm-ket"></small>
+        </article>
+        <article class="kartu kartu-angka">
+          <div class="angka-kepala"><span>Sesi selesai</span><i class="ikon-bulat"><svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></i></div>
+          <b class="angka-besar" id="a-sesi">–</b>
+          <small>Total latihan di semua level</small>
+        </article>
+        <article class="kartu kartu-angka">
+          <div class="angka-kepala"><span>Waktu latihan</span><i class="ikon-bulat"><svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg></i></div>
+          <b class="angka-besar" id="a-waktu">–</b>
+          <small id="a-waktu-ket"></small>
+        </article>
+      </section>
+
+      <!-- Grafik perkembangan -->
+      <section class="bagian">
+        <div class="bagian-kepala">
+          <div>
+            <h2>Sedikit demi sedikit, makin lancar</h2>
+            <p id="grafik-sub"></p>
+          </div>
+          <span class="pil-level" id="grafik-level"></span>
+        </div>
+        <div class="dua-grafik" id="dua-grafik"></div>
+        <p class="catatan" id="catatan-kpm"></p>
+      </section>
+
+      <!-- Progres level -->
+      <section class="kartu">
+        <div class="kartu-kepala">
+          <h2>Progres Level</h2>
+          <b class="biru" id="progres-teks"></b>
+        </div>
+        <div class="bar-stat"><i id="progres-bar" style="width:0%"></i></div>
+        <div class="kisi-level" id="kisi-level"></div>
+      </section>
+
+      <!-- Huruf yang sering salah -->
+      <section class="kartu">
+        <div class="kartu-kepala">
+          <div>
+            <h2>Huruf yang Sering Salah</h2>
+            <p class="sub" id="salah-sub"></p>
+          </div>
+          <span class="pil-label">
+            <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg>
+            Panduan jari
+          </span>
+        </div>
+        <div class="kisi-salah" id="kisi-salah"></div>
+        <div class="tips-stat" id="tips-salah">
+          <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+          <span id="tips-teks"></span>
+        </div>
+      </section>
+
+      <!-- Riwayat latihan -->
+      <section class="kartu">
+        <div class="kartu-kepala">
+          <div>
+            <h2>Riwayat Latihan</h2>
+            <p class="sub" id="riwayat-sub"></p>
+          </div>
+          <span class="sub" id="riwayat-tanggal"></span>
+        </div>
+        <div class="gulir">
+          <div class="tabel" role="table" aria-label="Riwayat latihan">
+            <div class="tabel-baris tabel-kepala" role="row">
+              <span role="columnheader">Tanggal / sesi</span>
+              <span role="columnheader">Level</span>
+              <span role="columnheader">Durasi</span>
+              <span role="columnheader">KPM</span>
+              <span role="columnheader">Akurasi</span>
+              <span role="columnheader">Status hasil</span>
+            </div>
+            <div id="tabel-isi"></div>
+          </div>
+        </div>
+        <p class="catatan">Selesai berarti sesi dituntaskan, belum tentu lulus. Tanda – pada KPM: kecepatan belum dinilai pada level itu.</p>
+      </section>
+
+      <!-- Langkah berikutnya -->
+      <section class="kartu langkah">
+        <div class="langkah-ikon">
+          <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+        </div>
+        <div class="langkah-isi">
+          <span class="langkah-label">Langkah berikutnya</span>
+          <h2 id="langkah-judul"></h2>
+          <p id="langkah-teks"></p>
+          <small id="langkah-syarat"></small>
+        </div>
+        <div class="langkah-aksi" id="langkah-aksi"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="kaki">
+    <span>
+      <svg class="ik" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>
+      Modul Pengenalan Teknik Kendaraan Ringan Otomotif
+    </span>
+    <span>© 2026 TOTYPE</span>
+  </footer>
+
+  <script src="js/sesi.js"></script>
+  <script src="js/level.js"></script>
+  <script src="js/jari.js"></script>
+  <script src="js/statistik.js"></script>
+</body>
+</html>
