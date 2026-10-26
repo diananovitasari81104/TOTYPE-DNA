@@ -8,7 +8,7 @@
   --oranye-50: #FFF7E6;
 }
 
-.isi-latihan { flex: 1; width: 100%; max-width: 1040px; margin: 0 auto; padding: 14px 24px 28px; display: flex; flex-direction: column; gap: 12px; }
+.isi-latihan { flex: 1; width: 100%; max-width: 1200px; margin: 0 auto; padding: 14px 24px 28px; display: flex; flex-direction: column; gap: 12px; }
 
 /* ---------- Bilah sesi ---------- */
 .bilah-sesi {
@@ -102,19 +102,28 @@
 @keyframes denyut { 50% { box-shadow: 0 2px 0 var(--oranye-tua), 0 0 0 10px rgba(245, 158, 11, .15); } }
 @media (prefers-reduced-motion: reduce) { .tuts.bantu { animation: none; } }
 
-/* ---------- Panduan tangan ---------- */
-.panduan { display: grid; grid-template-columns: 200px 1fr 200px; gap: 16px; align-items: center; margin-top: 4px; }
+/* ---------- Tangan kiri · keyboard · tangan kanan ---------- */
+.area-keyboard {
+  display: grid; grid-template-columns: minmax(160px, 1fr) auto minmax(160px, 1fr);
+  gap: 16px; align-items: stretch;
+}
+.area-keyboard .keyboard { align-self: center; }
 .kartu-tangan {
-  background: #fff; border: 1px solid var(--garis); border-radius: 16px; padding: 12px 12px 14px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: #fff; border: 1px solid var(--garis); border-radius: 18px; padding: 16px 12px;
   text-align: center; box-shadow: var(--bayangan);
 }
-.gambar-tangan svg { width: 120px; height: 120px; display: block; margin: 0 auto 6px; }
-.kartu-tangan b { display: block; font-size: 14px; color: var(--navy); }
-.kartu-tangan small { display: block; font-size: 12.5px; color: var(--teks-2); }
+.gambar-tangan svg { width: 130px; height: 130px; display: block; margin: 0 auto 10px; }
+.kartu-tangan b { display: block; font-size: 15px; color: var(--navy); }
+.kartu-tangan small { display: block; font-size: 12.5px; color: var(--teks-2); margin-top: 2px; }
 .kartu-tangan small.aktif { color: var(--oranye-tua); font-weight: 600; }
-.postur { text-align: center; }
-.postur b { font-size: 14px; color: var(--navy); }
-.postur p { margin: 6px 0 0; font-size: 13px; color: var(--teks-2); }
+
+/* Layar sedang: tangan pindah ke bawah keyboard */
+@media (max-width: 1120px) {
+  .area-keyboard { grid-template-columns: 1fr 1fr; }
+  .area-keyboard .keyboard { grid-column: 1 / -1; grid-row: 1; justify-self: center; }
+  .gambar-tangan svg { width: 100px; height: 100px; }
+}
 
 /* ---------- Dialog (konfirmasi keluar & jeda otomatis) ---------- */
 .tirai {
@@ -172,8 +181,6 @@ kbd {
 @media (max-width: 900px) {
   .bilah-sesi { grid-template-columns: 1fr auto; }
   .kemajuan { grid-column: 1 / -1; max-width: none; order: 3; }
-  .panduan { grid-template-columns: 1fr 1fr; }
-  .postur { grid-column: 1 / -1; order: 3; }
   .keyboard { --u: 34px; --g: 4px; padding: 10px; }
   .teks-latihan { font-size: 26px; }
 }
