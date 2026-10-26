@@ -274,9 +274,19 @@ function selesai(waktuHabis) {
   const ak = akurasi(), kec = wpm();
   const lulus = S.total > 0 && ak >= level.syarat.akurasi && kec >= level.syarat.wpm;
 
+  // Tiga huruf yang paling sering salah pada sesi ini
+  const hurufSalah = Object.keys(S.salahPerHuruf)
+    .map(function (k) { return { huruf: k, jumlah: S.salahPerHuruf[k] }; })
+    .sort(function (a, b) { return b.jumlah - a.jumlah; })
+    .slice(0, 3);
+
   const kunci = String(level.id);
   progres.riwayat[kunci] = (progres.riwayat[kunci] || []).concat([
-    { akurasi: ak, wpm: kec, lulus: lulus, kode: S.kode, waktu: new Date().toISOString() }
+    {
+      akurasi: ak, wpm: kec, lulus: lulus, kode: S.kode, waktu: new Date().toISOString(),
+      // dipakai halaman Statistik
+      detik: Math.round(S.aktifMs / 1000), tuts: S.total, salah: S.total - S.benar, hurufSalah: hurufSalah
+    }
   ]).slice(-20);
 
   let levelBaru = false;
@@ -285,11 +295,6 @@ function selesai(waktuHabis) {
     if (level.id < LEVELS.length && progres.levelTerbuka <= level.id) { progres.levelTerbuka = level.id + 1; levelBaru = true; }
   }
   Sesi.simpanProgres(siswa, progres);
-
-  const hurufSalah = Object.keys(S.salahPerHuruf)
-    .map(function (k) { return { huruf: k, jumlah: S.salahPerHuruf[k] }; })
-    .sort(function (a, b) { return b.jumlah - a.jumlah; })
-    .slice(0, 3);
 
   try {
     localStorage.setItem('totype:hasil', JSON.stringify({
