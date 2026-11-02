@@ -5,6 +5,8 @@
 const BATAS_DIAM_DETIK = 30;   // diam selama ini → latihan dijeda
 const BATAS_SALAH = 3;         // salah berulang di huruf yang sama → bantuan muncul
 
+/* Aturan poin (POIN, AKURASI_MIN) ada di js/level.js */
+
 /* Peta jari (JARI, namaJari) ada di js/jari.js */
 
 /* ---------- Susunan keyboard: [id, lebar, label] ---------- */
@@ -18,14 +20,9 @@ const BARIS_KB = [
 
 /* ---------- Persiapan ---------- */
 const siswa = Sesi.wajibMasuk();
-const progres = siswa ? Sesi.muatProgres(siswa) : null;
 const nomorLevel = parseInt(new URLSearchParams(location.search).get('level'), 10) || 1;
 const level = LEVELS.find(function (l) { return l.id === nomorLevel; });
-
-// Level belum terbuka atau tidak ada → kembali ke Beranda
-if (siswa && (!level || level.id > progres.levelTerbuka)) {
-  window.location.href = 'beranda.html';
-}
+let progres = null; // diisi dari Firestore oleh persiapan()
 
 function $(id) { return document.getElementById(id); }
 function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -38,7 +35,24 @@ let S = null;      // status sesi latihan
 let detak = null;  // interval jam
 let dialog = null; // dialog yang sedang terbuka: 'keluar' | 'diam'
 
-if (siswa && level && level.id <= progres.levelTerbuka) mulai();
+if (siswa) persiapan();
+
+// Ambil progres dari Firestore dulu, baru latihan dimulai
+async function persiapan() {
+  if (!level) { window.location.href = 'beranda.html'; return; }
+  $('label-teks').textContent = 'Memuat latihan...';
+  try {
+    progres = await Sesi.muatProgres(siswa);
+  } catch (err) {
+    console.error(err);
+    $('label-teks').textContent = 'Gagal memuat';
+    $('teks-latihan').innerHTML = '<span class="pesan-gagal">Gagal terhubung ke server. Periksa koneksi internet lalu muat ulang halaman.</span>';
+    return;
+  }
+  // Level belum terbuka → kembali ke Beranda
+  if (level.id > progres.levelTerbuka) { window.location.href = 'beranda.html'; return; }
+  mulai();
+}
 
 function mulai() {
   // Kepala
@@ -264,7 +278,7 @@ document.addEventListener('keydown', function (e) {
   perbarui();
 });
 
-/* ---------- Selesai: simpan hasil lalu ke halaman Hasil ---------- */
+/* ---------- Selesai: simpan hasil ke Firestore lalu ke halaman Hasil ---------- */
 function selesai(waktuHabis) {
   if (S.selesai) return;
   S.selesai = true;
@@ -273,38 +287,76 @@ function selesai(waktuHabis) {
 
   const ak = akurasi(), kec = wpm();
   const lulus = S.total > 0 && ak >= level.syarat.akurasi && kec >= level.syarat.wpm;
+  const kunci = String(level.id);
 
-  // Tiga huruf yang paling sering salah pada sesi ini
+  // Hitung poin (sebelum progres diperbarui, supaya rekor lama masih bisa dibandingkan)
+  const rekorLama = progres.terbaik[kunci];
+  const lulusPertama = lulus && progres.levelLulus.indexOf(level.id) === -1;
+  const rincianPoin = [];
+  if (S.total > 0 && ak >= AKURASI_MIN) {
+    rincianPoin.push({ alasan: 'Menyelesaikan latihan', poin: POIN.selesai });
+    if (ak >= level.syarat.akurasi) rincianPoin.push({ alasan: 'Akurasi memenuhi syarat', poin: POIN.tepat });
+    if (typeof rekorLama === 'number' && ak > rekorLama) rincianPoin.push({ alasan: 'Lebih baik dari rekormu', poin: POIN.naik });
+    if (lulusPertama) rincianPoin.push({ alasan: 'Lulus level baru', poin: POIN.lulusBaru });
+  }
+  const poinDidapat = rincianPoin.reduce(function (t, r) { return t + r.poin; }, 0);
+
+  // Poin mingguan mulai dari 0 lagi setiap Senin
+  const minggu = Sesi.kunciMingguIni();
+  if (progres.kunciMinggu !== minggu) { progres.kunciMinggu = minggu; progres.poinMingguan = 0; }
+  progres.poinMingguan += poinDidapat;
+  progres.poinTotal = (progres.poinTotal || 0) + poinDidapat;
+
+  // Perbarui progres
+  progres.jumlahLatihan = (progres.jumlahLatihan || 0) + 1;
+  if (!(rekorLama >= ak)) progres.terbaik[kunci] = ak;
+  let levelBaru = false;
+  if (lulus) {
+    if (lulusPertama) progres.levelLulus.push(level.id);
+    if (level.id < LEVELS.length && progres.levelTerbuka <= level.id) { progres.levelTerbuka = level.id + 1; levelBaru = true; }
+  }
+
   const hurufSalah = Object.keys(S.salahPerHuruf)
     .map(function (k) { return { huruf: k, jumlah: S.salahPerHuruf[k] }; })
     .sort(function (a, b) { return b.jumlah - a.jumlah; })
     .slice(0, 3);
 
-  const kunci = String(level.id);
-  progres.riwayat[kunci] = (progres.riwayat[kunci] || []).concat([
-    {
-      akurasi: ak, wpm: kec, lulus: lulus, kode: S.kode, waktu: new Date().toISOString(),
-      // dipakai halaman Statistik
-      detik: Math.round(S.aktifMs / 1000), tuts: S.total, salah: S.total - S.benar, hurufSalah: hurufSalah
-    }
-  ]).slice(-20);
+  const ringkasan = {
+    level: level.id, akurasi: ak, wpm: kec, lulus: lulus,
+    totalTuts: S.total, tutsSalah: S.total - S.benar,
+    hurufSalah: hurufSalah, kode: S.kode, detik: Math.round(S.aktifMs / 1000),
+    poin: poinDidapat
+  };
 
-  let levelBaru = false;
-  if (lulus) {
-    if (progres.levelLulus.indexOf(level.id) === -1) progres.levelLulus.push(level.id);
-    if (level.id < LEVELS.length && progres.levelTerbuka <= level.id) { progres.levelTerbuka = level.id + 1; levelBaru = true; }
-  }
-  Sesi.simpanProgres(siswa, progres);
-
+  // Hasil untuk halaman Hasil (cukup disimpan di browser ini)
   try {
-    localStorage.setItem('totype:hasil', JSON.stringify({
-      level: level.id, akurasi: ak, wpm: kec, lulus: lulus, levelBaru: levelBaru,
-      totalTuts: S.total, tutsSalah: S.total - S.benar,
-      waktuHabis: waktuHabis, hurufSalah: hurufSalah, kode: S.kode, detik: Math.round(S.aktifMs / 1000)
-    }));
+    localStorage.setItem('totype:hasil', JSON.stringify(Object.assign({ levelBaru: levelBaru, waktuHabis: waktuHabis, rincianPoin: rincianPoin, poinMingguan: progres.poinMingguan }, ringkasan)));
   } catch (err) { /* abaikan */ }
 
-  window.location.href = 'hasil.html';
+  simpanKeServer(ringkasan);
+}
+
+// Simpan progres + riwayat ke Firestore. Kalau gagal, tawarkan coba lagi.
+async function simpanKeServer(ringkasan) {
+  bukaDialog('simpan',
+    '<div class="dialog-ikon"><svg class="ik" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></div>' +
+    '<h2>Menyimpan hasil...</h2><p>Tunggu sebentar, hasil latihanmu sedang disimpan.</p>');
+  try {
+    await Sesi.simpanLatihan(siswa, progres, ringkasan);
+    window.location.href = 'hasil.html';
+  } catch (err) {
+    console.error(err);
+    bukaDialog('simpan',
+      '<div class="dialog-ikon oranye"><svg class="ik" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><path d="M12 16h.01"/></svg></div>' +
+      '<h2>Hasil belum tersimpan</h2>' +
+      '<p>Koneksi ke server terputus. Periksa internet, lalu coba simpan lagi supaya progresmu tidak hilang.</p>' +
+      '<div class="aksi">' +
+        '<button class="tombol tombol-kedua" id="d-lewati">Lihat Hasil</button>' +
+        '<button class="tombol tombol-utama" id="d-ulang">Coba Simpan Lagi</button>' +
+      '</div>');
+    $('d-ulang').addEventListener('click', function () { simpanKeServer(ringkasan); });
+    $('d-lewati').addEventListener('click', function () { window.location.href = 'hasil.html'; });
+  }
 }
 
 /* ---------- Dialog ---------- */

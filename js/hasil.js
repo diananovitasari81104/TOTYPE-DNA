@@ -178,7 +178,25 @@ function tampilkanHasil() {
     '</div>';
   }
 
+  /* ---------- Poin papan peringkat ---------- */
+  let kartuPoin = '';
+  if (typeof hasil.poin === 'number') {
+    const rincian = (hasil.rincianPoin || []).map(function (r) {
+      return '<span class="chip-poin">+' + r.poin + ' ' + r.alasan + '</span>';
+    }).join('');
+    kartuPoin =
+      '<section class="kartu-poin">' +
+        '<div class="poin-angka">+' + hasil.poin + '<small>poin</small></div>' +
+        '<div class="poin-isi">' +
+          (hasil.poin > 0
+            ? '<b>Total poinmu minggu ini: ' + (hasil.poinMingguan || hasil.poin) + '</b><div class="daftar-chip">' + rincian + '</div>'
+            : '<b>Belum dapat poin</b><p>Latihan dengan akurasi di bawah ' + AKURASI_MIN + '% tidak mendapat poin. Ketik lebih pelan dan teliti.</p>') +
+        '</div>' +
+        '<a class="tautan-level" href="peringkat.html">' + ik('daftar') + 'Lihat Peringkat</a>' +
+      '</section>';
+  }
+
   document.getElementById('isi-hasil').innerHTML =
-    bilah + status + '<section class="grid-nilai">' + kartuKecepatan + kartuAkurasi + '</section>' + kartuHuruf + aksi;
+    bilah + status + kartuPoin + '<section class="grid-nilai">' + kartuKecepatan + kartuAkurasi + '</section>' + kartuHuruf + aksi;
   document.title = (hasil.lulus ? 'Hasil Latihan (Lulus)' : 'Hasil Latihan (Belum Lulus)') + ' – TOTYPE';
 }

@@ -69,3 +69,7 @@ select.input option { color: var(--teks); }
   .kartu-masuk { padding: 24px 20px 18px; }
   .isian-baris { grid-template-columns: 1fr; gap: 0; }
 }
+
+/* Pesan gagal terhubung / data bentrok */
+.pesan-umum { margin: 0 0 12px; padding: 10px 12px; border-radius: 10px; background: var(--merah-50); border: 1px solid #FECACA; font-size: 13.5px; }
+.tombol:disabled { opacity: .7; cursor: wait; }

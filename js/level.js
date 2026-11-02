@@ -101,3 +101,13 @@ function teksSyarat(level) {
   if (level.catatanSyarat) t += ' ' + level.catatanSyarat;
   return t;
 }
+
+/* Aturan poin papan peringkat (ubah angkanya di sini).
+   Poin menghargai usaha dan peningkatan, bukan hanya kecepatan. */
+const POIN = {
+  selesai: 10,        // menyelesaikan satu latihan (akurasi minimal AKURASI_MIN)
+  tepat: 5,           // akurasi memenuhi syarat lulus level itu
+  naik: 5,            // akurasi lebih baik dari rekor sendiri di level itu
+  lulusBaru: 20       // lulus sebuah level untuk pertama kali
+};
+const AKURASI_MIN = 50; // di bawah ini latihan tidak mendapat poin (mencegah asal ketik)

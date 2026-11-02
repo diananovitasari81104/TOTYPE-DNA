@@ -25,8 +25,18 @@ function tandai(el, idPesan, salah) {
   document.getElementById(idPesan).classList.toggle('tampil', salah);
 }
 
-form.addEventListener('submit', function (e) {
+const tombol = form.querySelector('button[type=submit]');
+const teksTombolAwal = tombol.innerHTML;
+const errUmum = document.getElementById('err-umum');
+
+function tampilkanErrUmum(pesan) {
+  errUmum.textContent = pesan;
+  errUmum.classList.toggle('tampil', !!pesan);
+}
+
+form.addEventListener('submit', async function (e) {
   e.preventDefault();
+  tampilkanErrUmum('');
 
   const nama = inNama.value.trim().replace(/\s+/g, ' ');
   const absen = parseInt(inAbsen.value, 10);
@@ -45,11 +55,28 @@ form.addEventListener('submit', function (e) {
     return;
   }
 
-  // Sementara disimpan di browser; nanti diganti Firebase
   const siswa = { nama: nama, absen: absen, kelas: kelas };
-  try { localStorage.setItem('totype:siswa', JSON.stringify(siswa)); } catch (err) { /* abaikan */ }
 
-  window.location.href = 'beranda.html';
+  // Tombol menunjukkan sedang memproses
+  tombol.disabled = true;
+  tombol.textContent = 'Menghubungkan...';
+
+  try {
+    // Login anonim ke Firebase, lalu buat/cocokkan data siswa di Firestore
+    await Sesi.daftarkan(siswa);
+    Sesi.simpanSiswaLokal(siswa);
+    window.location.href = 'beranda.html';
+  } catch (err) {
+    console.error(err);
+    if (err.kode === 'nama-beda') {
+      inAbsen.classList.add('salah');
+      tampilkanErrUmum('Kelas dan nomor absen ini sudah terdaftar atas nama lain. Periksa lagi kelas dan nomor absenmu, atau tanyakan ke guru.');
+    } else {
+      tampilkanErrUmum('Gagal terhubung ke server. Periksa koneksi internet lalu coba lagi.');
+    }
+    tombol.disabled = false;
+    tombol.innerHTML = teksTombolAwal;
+  }
 });
 
 inNama.focus();

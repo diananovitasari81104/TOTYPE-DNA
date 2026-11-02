@@ -2,15 +2,27 @@
    TOTYPE – halaman Beranda (Pilih Level Latihan)
    ========================================================= */
 const siswa = Sesi.wajibMasuk();
+if (siswa) tampilkanBeranda();
 
-if (siswa) {
-  const progres = Sesi.muatProgres(siswa);
-
+async function tampilkanBeranda() {
   /* ---------- Kepala: nama dan kelas siswa ---------- */
   document.getElementById('nama-siswa').textContent = siswa.nama;
   document.getElementById('kelas-siswa').textContent = siswa.kelas.split(' (')[0] + ' · Absen ' + siswa.absen;
   document.getElementById('avatar').textContent = siswa.nama.charAt(0).toUpperCase();
   document.getElementById('btn-keluar').addEventListener('click', Sesi.keluar);
+
+  /* ---------- Ambil progres dari Firestore ---------- */
+  const daftar = document.getElementById('daftar-level');
+  daftar.innerHTML = '<p class="status-muat">Memuat progres belajarmu...</p>';
+  let progres;
+  try {
+    progres = await Sesi.muatProgres(siswa);
+  } catch (err) {
+    console.error(err);
+    daftar.innerHTML = '<p class="status-muat gagal">Gagal memuat progres. Periksa koneksi internet. ' +
+      '<button class="tombol tombol-garis" type="button" onclick="location.reload()">Coba lagi</button></p>';
+    return;
+  }
 
   /* ---------- Progres belajar ---------- */
   const jumlahLulus = progres.levelLulus.length;
@@ -31,8 +43,8 @@ if (siswa) {
   function ik(nama) { return '<svg class="ik" viewBox="0 0 24 24" aria-hidden="true">' + IKON[nama] + '</svg>'; }
 
   function akurasiTerbaik(id) {
-    const data = progres.riwayat[String(id)] || [];
-    return data.length ? Math.max.apply(null, data.map(function (d) { return d.akurasi; })) : null;
+    const nilai = progres.terbaik[String(id)];
+    return typeof nilai === 'number' ? nilai : null;
   }
 
   const html = LEVELS.map(function (lv) {
@@ -73,5 +85,5 @@ if (siswa) {
     '</article>';
   }).join('');
 
-  document.getElementById('daftar-level').innerHTML = html;
+  daftar.innerHTML = html;
 }

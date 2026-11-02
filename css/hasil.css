@@ -154,3 +154,18 @@
   .aksi-hasil .tautan-level { align-self: center; margin: 4px 0 0; }
   .aksi-hasil.tengah .aksi-baris { flex-direction: column; }
 }
+
+/* ---------- Poin papan peringkat ---------- */
+.kartu-poin {
+  display: flex; align-items: center; gap: 18px; padding: 14px 20px; border-radius: 16px;
+  background: #fff; border: 1px solid var(--biru-100); box-shadow: var(--bayangan);
+}
+.poin-angka { font-size: 30px; font-weight: 800; color: var(--biru); line-height: 1; flex: none; }
+.poin-angka small { font-size: 13px; margin-left: 4px; color: var(--teks-2); font-weight: 600; }
+.poin-isi { flex: 1; min-width: 0; }
+.poin-isi b { font-size: 14.5px; color: var(--navy); }
+.poin-isi p { margin: 2px 0 0; font-size: 13.5px; color: var(--teks-2); }
+.daftar-chip { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.chip-poin { padding: 3px 10px; border-radius: 999px; background: var(--biru-50); color: var(--biru-tua); font-size: 12px; font-weight: 600; }
+.kartu-poin .tautan-level { margin-left: 0; flex: none; }
+@media (max-width: 760px) { .kartu-poin { flex-wrap: wrap; } }

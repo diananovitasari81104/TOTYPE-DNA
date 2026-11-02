@@ -143,3 +143,8 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
   .tips-lab { display: none; }
   .kaki { flex-direction: column; padding: 16px; }
 }
+
+/* Status memuat / gagal memuat progres */
+.status-muat { margin: 0; padding: 28px; text-align: center; color: var(--teks-2); background: #fff; border: 1px dashed var(--garis); border-radius: 16px; }
+.status-muat.gagal { color: var(--merah); display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+.status-muat .tombol { min-height: 40px; border-radius: 999px; font-size: 14px; }

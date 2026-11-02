@@ -1,0 +1,119 @@
+/* =========================================================
+   TOTYPE – halaman Papan Peringkat
+   (memakai juga kepala, kaki, .pil-kurikulum, .status-muat dari beranda.css)
+   ========================================================= */
+:root { --emas: #F59E0B; --perak: #94A3B8; --perunggu: #C2783E; }
+
+.isi-peringkat { max-width: 900px; display: flex; flex-direction: column; gap: 18px; }
+.isi-peringkat .ik { width: 18px; height: 18px; }
+
+/* ---------- Judul ---------- */
+.judul-peringkat { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; }
+.judul-peringkat h1 { margin: 12px 0 4px; font-size: 30px; color: var(--navy); line-height: 1.2; }
+.judul-peringkat p { margin: 0; color: var(--teks-2); }
+.info-minggu {
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 12px;
+  background: #fff; border: 1px solid var(--garis); box-shadow: var(--bayangan); flex: none;
+}
+.info-minggu .ik { color: var(--biru); }
+.info-minggu b { display: block; font-size: 14px; color: var(--navy); }
+.info-minggu small { display: block; font-size: 12px; color: var(--teks-2); }
+
+/* ---------- Kartu posisimu ---------- */
+#isi-peringkat { display: flex; flex-direction: column; gap: 18px; }
+.kartu-saya {
+  display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; gap: 24px;
+  background: var(--navy); color: #fff; border-radius: 18px; padding: 18px 24px;
+  box-shadow: 0 12px 28px rgba(15, 42, 74, .25);
+}
+.label-kecil { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #9FB3CC; }
+.peringkat-besar { display: block; font-size: 34px; font-weight: 800; line-height: 1.1; }
+.kartu-saya-tengah b { display: block; font-size: 34px; font-weight: 800; line-height: 1.1; color: #93B4FF; font-variant-numeric: tabular-nums; }
+.kartu-saya-kiri, .kartu-saya-tengah { padding-right: 24px; border-right: 1px solid rgba(255, 255, 255, .15); }
+.kartu-saya p { margin: 0; font-size: 14.5px; color: #DCE6F5; }
+.kartu-saya p b { color: #fff; }
+.kartu-saya .tombol { text-decoration: none; border-radius: 999px; min-height: 46px; font-size: 15px; white-space: nowrap; }
+
+/* ---------- Podium tiga besar ---------- */
+.podium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: end; }
+.podium-item {
+  position: relative; display: flex; flex-direction: column; align-items: center; text-align: center;
+  background: #fff; border: 1px solid var(--garis); border-radius: 18px; padding: 22px 14px 0; overflow: hidden;
+  box-shadow: var(--bayangan);
+}
+.podium-item.saya { border: 2px solid var(--biru); }
+.medali {
+  position: absolute; top: 12px; left: 12px; width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 800; font-size: 13px; color: #fff;
+}
+.juara-1 .medali { background: var(--emas); }
+.juara-2 .medali { background: var(--perak); }
+.juara-3 .medali { background: var(--perunggu); }
+.avatar-besar {
+  width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--biru-50); color: var(--biru-tua); font-size: 22px; font-weight: 800; margin-bottom: 10px;
+  border: 3px solid #fff; box-shadow: 0 0 0 2px var(--biru-100);
+}
+.juara-1 .avatar-besar { width: 68px; height: 68px; font-size: 26px; background: #FFF7E6; color: #B45309; box-shadow: 0 0 0 3px var(--emas); }
+.podium-item b { font-size: 16px; color: var(--navy); }
+.poin-podium { margin-top: 4px; font-size: 20px; font-weight: 800; color: var(--biru); font-variant-numeric: tabular-nums; }
+.juara-1 .poin-podium { font-size: 24px; color: #B45309; }
+.podium-item small { font-size: 12.5px; color: var(--teks-2); margin-bottom: 14px; }
+.alas { width: calc(100% + 28px); height: 10px; }
+.juara-1 .alas { height: 40px; background: linear-gradient(#FFF7E6, #FDE7BF); }
+.juara-2 .alas { height: 24px; background: #F1F5F9; }
+.juara-3 .alas { height: 12px; background: #FAF0E6; }
+
+.tag-saya {
+  display: inline-block; vertical-align: middle; margin-left: 4px; padding: 1px 8px; border-radius: 999px;
+  background: var(--biru); color: #fff; font-size: 10.5px; font-weight: 700;
+}
+
+/* ---------- Tabel 4–10 ---------- */
+.kartu-tabel { background: #fff; border: 1px solid var(--garis); border-radius: 18px; overflow: hidden; box-shadow: var(--bayangan); }
+.kartu-tabel table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.kartu-tabel th {
+  text-align: left; padding: 12px 18px; background: #F8FAFC; border-bottom: 1px solid var(--garis);
+  font-size: 11.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--teks-2);
+}
+.kartu-tabel td { padding: 12px 18px; border-bottom: 1px solid var(--garis); color: var(--teks); }
+.kartu-tabel tr:last-child td { border-bottom: none; }
+.kolom-no { width: 48px; font-weight: 700; color: var(--teks-2); }
+.kolom-poin { text-align: right; font-weight: 800; color: var(--navy); font-variant-numeric: tabular-nums; }
+.avatar-kecil {
+  display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; margin-right: 10px;
+  background: var(--biru-50); color: var(--biru-tua); font-size: 12px; font-weight: 700; vertical-align: middle;
+}
+.kartu-tabel tr.saya td { background: var(--biru-50); }
+.kartu-tabel tr.saya .kolom-poin { color: var(--biru); }
+.kartu-tabel tr.pemisah td { text-align: center; color: var(--teks-3); padding: 4px; letter-spacing: 4px; }
+
+/* ---------- Kosong ---------- */
+.kosong-peringkat { text-align: center; padding: 36px 20px; background: #fff; border: 1px dashed var(--garis); border-radius: 18px; }
+.kosong-peringkat b { font-size: 17px; color: var(--navy); }
+.kosong-peringkat p { margin: 6px 0 0; color: var(--teks-2); }
+
+/* ---------- Aturan poin ---------- */
+.kartu-aturan { background: var(--biru-50); border: 1px solid var(--biru-100); border-radius: 18px; padding: 18px 22px; }
+.kartu-aturan h2 { margin: 0 0 10px; font-size: 16px; color: var(--navy); }
+.kartu-aturan ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+.kartu-aturan li { font-size: 14px; color: var(--teks); }
+.kartu-aturan li b { display: inline-block; min-width: 38px; color: var(--biru-tua); }
+.catatan-aturan { margin: 12px 0 0; font-size: 13px; color: var(--teks-2); }
+
+@media (max-width: 760px) {
+  .judul-peringkat { flex-direction: column; align-items: stretch; }
+  .kartu-saya { grid-template-columns: 1fr 1fr; }
+  .kartu-saya p, .kartu-saya .tombol { grid-column: 1 / -1; }
+  .kartu-saya-tengah { border-right: none; }
+  .podium { gap: 8px; }
+  .podium-item { padding: 18px 6px 0; }
+  .kartu-tabel th:nth-child(4), .kartu-tabel td:nth-child(4) { display: none; }
+  .kartu-aturan ul { grid-template-columns: 1fr; }
+}
+.kartu-tabel tr.saya .avatar-kecil { background: #fff; box-shadow: 0 0 0 1px var(--biru-100); }
+@media (max-width: 760px) {
+  .kartu-tabel th, .kartu-tabel td { padding: 10px 10px; }
+  .kartu-tabel td:nth-child(2) { white-space: nowrap; }
+  .avatar-kecil { display: none; }
+}

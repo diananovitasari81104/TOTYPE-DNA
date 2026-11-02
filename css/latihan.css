@@ -184,3 +184,6 @@ kbd {
   .keyboard { --u: 34px; --g: 4px; padding: 10px; }
   .teks-latihan { font-size: 26px; }
 }
+
+/* Pesan gagal memuat latihan */
+.pesan-gagal { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 500; color: var(--merah); letter-spacing: 0; }
