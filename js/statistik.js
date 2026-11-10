@@ -1,6 +1,7 @@
 /* =========================================================
    TOTYPE – halaman Statistik
-   Membaca riwayat latihan siswa (progres.riwayat, disimpan oleh
+   Membaca progres dan riwayat latihan siswa dari Firestore
+   (siswa/{KELAS_ABSEN} dan subkoleksi riwayat, disimpan oleh
    latihan.js) lalu menampilkan angka ringkas, grafik perkembangan,
    progres level, huruf yang sering salah, riwayat, dan langkah berikutnya.
    Sesi lama yang belum menyimpan durasi / huruf salah ditampilkan "–".
@@ -45,9 +46,7 @@ function syaratLevel(lv) {
 /* Level pertama yang menilai kecepatan (KPM) */
 const levelKpm = LEVELS.find(function (l) { return l.syarat.wpm > 0; });
 
-function mulai() {
-  const progres = Sesi.muatProgres(siswa);
-
+async function mulai() {
   /* ---------- Kepala ---------- */
   $('nama-siswa').textContent = siswa.nama;
   $('kelas-siswa').textContent = siswa.kelas.split(' (')[0] + ' · Absen ' + siswa.absen;
@@ -56,12 +55,25 @@ function mulai() {
   const namaDepan = siswa.nama.split(' ')[0];
   $('sapaan').textContent = 'Setiap latihan adalah kemajuan, ' + namaDepan + '. Yuk, lihat hal yang sudah baik dan yang bisa dilatih lagi.';
 
-  /* ---------- Gabungkan semua sesi, urut waktu ---------- */
-  const semua = [];
-  Object.keys(progres.riwayat).forEach(function (k) {
-    (progres.riwayat[k] || []).forEach(function (d) {
-      semua.push(Object.assign({ level: parseInt(k, 10) }, d));
-    });
+  /* ---------- Ambil progres dan riwayat dari Firestore ---------- */
+  $('meta-kiri').textContent = 'Memuat statistikmu...';
+  let progres, riwayatServer;
+  try {
+    progres = await Sesi.muatProgres(siswa);
+    riwayatServer = await Sesi.muatRiwayat(siswa, 100);
+  } catch (err) {
+    console.error(err);
+    $('meta-kiri').textContent = '';
+    $('kosong').hidden = false;
+    $('kosong').querySelector('h2').textContent = 'Statistik gagal dimuat';
+    $('kosong').querySelector('p').textContent = Sesi.pesanError(err);
+    return;
+  }
+
+  /* ---------- Semua sesi, urut waktu ---------- */
+  // Firestore menyimpan totalTuts & tutsSalah; halaman ini memakai nama tuts & salah
+  const semua = riwayatServer.map(function (d) {
+    return Object.assign({}, d, { tuts: d.totalTuts, salah: d.tutsSalah });
   });
   semua.sort(function (a, b) { return new Date(a.waktu) - new Date(b.waktu); });
   semua.forEach(function (d, i) { d.no = i + 1; d.tgl = new Date(d.waktu); });

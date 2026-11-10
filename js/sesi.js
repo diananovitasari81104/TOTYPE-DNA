@@ -72,6 +72,33 @@ const Sesi = {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   },
 
+  /* ---------- Pesan error yang mudah dipahami ---------- */
+  // Mengubah error Firebase menjadi penjelasan + kode, supaya penyebabnya langsung terlihat.
+  pesanError: function (err) {
+    const kode = (err && err.code) || '';
+    const pesan = ((err && err.message) || '').toLowerCase();
+    let teks;
+    if (location.protocol === 'file:' || kode === 'auth/operation-not-supported-in-this-environment')
+      teks = 'Halaman dibuka langsung dari file. Jalankan lewat Live Server (VS Code) atau Firebase Hosting.';
+    else if (kode === 'auth/operation-not-allowed' || kode === 'auth/admin-restricted-operation')
+      teks = 'Login anonim belum aktif. Buka Firebase Console → Authentication → Sign-in method → aktifkan Anonymous.';
+    else if (kode === 'auth/unauthorized-domain')
+      teks = 'Alamat web ini belum diizinkan. Tambahkan di Authentication → Settings → Authorized domains.';
+    else if (kode.indexOf('api-key') !== -1)
+      teks = 'apiKey di js/firebase-config.js tidak cocok dengan proyek Firebase.';
+    else if (kode === 'auth/network-request-failed')
+      teks = 'Tidak bisa menghubungi Firebase. Periksa koneksi internet, atau jaringan sekolah memblokir Google.';
+    else if (kode === 'permission-denied')
+      teks = 'Ditolak aturan keamanan Firestore. Pastikan Rules sudah ditempel dan di-Publish.';
+    else if (kode === 'not-found' || kode === 'failed-precondition' || pesan.indexOf('does not exist') !== -1)
+      teks = 'Database Firestore belum dibuat. Buka Firestore Database → Create database.';
+    else if (kode === 'unavailable' || pesan.indexOf('offline') !== -1)
+      teks = 'Firestore tidak bisa dihubungi. Pastikan database Firestore sudah dibuat dan internet aktif.';
+    else
+      teks = 'Gagal terhubung ke server. Periksa koneksi internet lalu coba lagi.';
+    return teks + (kode ? ' (kode: ' + kode + ')' : '');
+  },
+
   /* ---------- Login anonim Firebase ---------- */
   // Dipanggil sebelum membaca/menulis Firestore. Kalau belum login, login anonim dulu.
   siapkan: function () {
@@ -150,6 +177,22 @@ const Sesi = {
     batch.set(ref.collection('riwayat').doc(), Object.assign({}, catatan, { waktu: waktu }));
 
     await batch.commit();
+  },
+
+  /* ---------- Riwayat latihan satu siswa (untuk halaman Statistik) ---------- */
+  // Mengambil sesi terbaru (maks. `batas`), lalu dikembalikan urut dari yang terlama.
+  // waktu diubah menjadi objek Date biasa.
+  muatRiwayat: async function (siswa, batas) {
+    await Sesi.siapkan();
+    const snap = await Sesi.refSiswa(siswa).collection('riwayat')
+      .orderBy('waktu', 'desc').limit(batas || 100).get();
+    const daftar = [];
+    snap.forEach(function (doc) {
+      const d = doc.data();
+      const waktu = (d.waktu && typeof d.waktu.toDate === 'function') ? d.waktu.toDate() : new Date(d.waktu || Date.now());
+      daftar.push(Object.assign({}, d, { waktu: waktu }));
+    });
+    return daftar.reverse();
   },
 
   /* ---------- Papan peringkat: semua siswa satu kelas ---------- */
